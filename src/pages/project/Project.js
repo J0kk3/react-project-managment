@@ -7,5 +7,5 @@ export default function Project ()
         <div>
             Project details
         </div>
-    )
+    );
 }
