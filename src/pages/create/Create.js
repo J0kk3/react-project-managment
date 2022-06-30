@@ -6,12 +6,11 @@ import './Create.css'
 
 const categories =
   [
-    { value: "development", label: "Development" },
+    { value: "programming", label: "Programming" },
     { value: "design", label: "Design" },
     { value: "sales", label: "Sales" },
     { value: "marketing", label: "Marketing" },
     { value: "business", label: "Business" },
-    { value: "programming", label: "Programming" },
     { value: "gaming", label: "Gaming" },
     { value: "other", label: "Other" }
   ]
@@ -29,6 +28,7 @@ export default function Create ()
   const [ priority, setPriority ] = useState( '' );
   const [ category, setCategory ] = useState( '' );
   const [ assignedUsers, setAssignedUsers ] = useState( [] );
+  const [ formError, setFormError ] = useState( null );
 
   useEffect( () =>
   {
@@ -45,6 +45,18 @@ export default function Create ()
   const handleSubmit = ( e ) =>
   {
     e.preventDefault();
+    setFormError( null );
+    if ( !category )
+    {
+      setFormError( "Please select a project category." );
+      return;
+    }
+    if ( assignedUsers.length < 1 )
+    {
+      setFormError( "Please assign the project to at least one user." );
+      return;
+    }
+
     console.log( name, details, dueDate, priority, category.value, assignedUsers );
   }
 
@@ -105,6 +117,8 @@ export default function Create ()
           />
         </label>
         <button className='btn'>Add Project</button>
+
+        { formError && <p className='error'>{ formError }</p> }
       </form>
     </div>
   );
