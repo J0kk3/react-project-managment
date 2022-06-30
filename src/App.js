@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { useAuthContext } from './hooks/useAuthContext';
 //Styles
 import './App.css'
 
@@ -10,14 +11,13 @@ import Signup from './pages/signup/Signup';
 import Project from './pages/project/Project';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import { useAuthContext } from './hooks/useAuthContext';
 import OnlineUsers from './components/OnlineUsers';
 
 
 
 function App ()
 {
-  const { user, authIsReady } = useAuthContext();
+  const { authIsReady, user } = useAuthContext();
 
   return (
     <div className="App">
