@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Select from 'react-select';
 import { useCollection } from "../../hooks/useCollection";
 import { timestamp } from '../../firebase/config';
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useFirestore } from '../../hooks/useFirestore';
 // Styles
 import './Create.css'
 
@@ -19,6 +21,8 @@ const categories =
 
 export default function Create ()
 {
+  const history = useHistory();
+  const { addDocument, response } = useFirestore( "projects" );
   const { documents } = useCollection( "users" );
   const [ users, setUsers ] = useState( [] );
   const { user } = useAuthContext();
@@ -45,7 +49,7 @@ export default function Create ()
     }
   }, [ documents ] );
 
-  const handleSubmit = ( e ) =>
+  const handleSubmit = async ( e ) =>
   {
     e.preventDefault();
     setFormError( null );
@@ -88,69 +92,72 @@ export default function Create ()
       assignedUsersList
     }
 
-    console.log( project );
+    await addDocument( project );
+    if ( !response.error )
+    {
+      history.push( "/" );
+    }
   }
 
+    return (
+      <div className="create-form">
+        <h2 className='page-title' >Create a new project</h2>
+        <form onSubmit={ handleSubmit }>
+          <label>
+            <span>Project Name:</span>
+            <input
+              required
+              type="text"
+              onChange={ ( e ) => setName( e.target.value ) }
+              value={ name }
+            />
+          </label>
+          <label>
+            <span>Project Details:</span>
+            <textarea
+              required
+              type="text"
+              onChange={ ( e ) => setDetails( e.target.value ) }
+              value={ details }
+            ></textarea>
+          </label>
+          <label>
+            <span>Set Due Date:</span>
+            <input
+              required
+              type="date"
+              onChange={ ( e ) => setDueDate( e.target.value ) }
+              value={ dueDate }
+            />
+          </label>
+          <label>
+            <span>Priority (max 5):</span>
+            <input
+              type="number"
+              max="10"
+              onChange={ ( e ) => setPriority( e.target.value ) }
+              value={ priority }
+            />
+          </label>
+          <label>
+            <span>Project Category:</span>
+            <Select
+              onChange={ ( option ) => setCategory( option ) }
+              options={ categories }
+            />
+          </label>
+          <label>
+            <span>Assign To:</span>
+            <Select
+              onChange={ ( option ) => setAssignedUsers( option ) }
+              options={ users }
+              isMulti
+            />
+          </label>
+          <button className='btn'>Add Project</button>
 
-  return (
-    <div className="create-form">
-      <h2 className='page-title' >Create a new project</h2>
-      <form onSubmit={ handleSubmit }>
-        <label>
-          <span>Project Name:</span>
-          <input
-            required
-            type="text"
-            onChange={ ( e ) => setName( e.target.value ) }
-            value={ name }
-          />
-        </label>
-        <label>
-          <span>Project Details:</span>
-          <textarea
-            required
-            type="text"
-            onChange={ ( e ) => setDetails( e.target.value ) }
-            value={ details }
-          ></textarea>
-        </label>
-        <label>
-          <span>Set Due Date:</span>
-          <input
-            required
-            type="date"
-            onChange={ ( e ) => setDueDate( e.target.value ) }
-            value={ dueDate }
-          />
-        </label>
-        <label>
-          <span>Priority (max 5):</span>
-          <input
-            type="number"
-            max="10"
-            onChange={ ( e ) => setPriority( e.target.value ) }
-            value={ priority }
-          />
-        </label>
-        <label>
-          <span>Project Category:</span>
-          <Select
-            onChange={ ( option ) => setCategory( option ) }
-            options={ categories }
-          />
-        </label>
-        <label>
-          <span>Assign To:</span>
-          <Select
-            onChange={ ( option ) => setAssignedUsers( option ) }
-            options={ users }
-            isMulti
-          />
-        </label>
-        <button className='btn'>Add Project</button>
-
-        { formError && <p className='error'>{ formError }</p> }
-      </form>
-    </div>
-  );
-}
+          { formError && <p className='error'>{ formError }</p> }
+        </form>
+      </div>
+    );
+  }
