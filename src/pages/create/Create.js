@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { useCollection } from "../../hooks/useCollection";
 import { timestamp } from '../../firebase/config';
@@ -21,7 +21,7 @@ const categories =
 
 export default function Create ()
 {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { addDocument, response } = useFirestore( "projects" );
   const { documents } = useCollection( "users" );
   const [ users, setUsers ] = useState( [] );
@@ -95,7 +95,7 @@ export default function Create ()
     await addDocument( project );
     if ( !response.error )
     {
-      history.push( "/" );
+      useNavigate.push( "/" );
     }
   }
 
