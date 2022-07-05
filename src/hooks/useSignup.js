@@ -31,6 +31,9 @@ export const useSignup = () =>
             //Update display name
             await res.user.updateProfile( { displayName, photoURL: imgUrl } );
 
+            //Verify email
+            await res.user.sendEmailVerification();
+
             //Create a user document
             await projectFirestore.collection( "users" ).doc( res.user.uid ).set(
                 {
@@ -39,10 +42,14 @@ export const useSignup = () =>
                     photoURL: imgUrl
                 } );
 
-            // Dispatch login action
-            dispatch( {
-                type: "LOGIN", payload: res.user
-            } );
+            // Dispatch login action res.user.emailVerified === true
+            if ( res.user.status === "Active" )
+            {
+                dispatch( {
+                    type: "LOGIN", payload: res.user
+                } );
+            }
+
 
             // Update state
             if ( !isCancelled )
