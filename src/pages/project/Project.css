@@ -42,3 +42,13 @@
 .project-summary + .btn {
     margin-top: 20px;
 }
+
+/* Project Comments */
+.project-comments {
+    margin-bottom: 0px;
+}
+
+.project-comments textarea {
+    min-height: 40px;
+    font-size: 1.5rem;
+}
