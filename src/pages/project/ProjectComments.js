@@ -3,6 +3,8 @@ import { timestamp } from "../../firebase/config";
 import { useAuthContext } from "../../hooks/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
 import Avatar from "../../components/Avatar";
+//Date-fns
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 export default function ProjectComments ( { project } )
 {
@@ -45,7 +47,7 @@ export default function ProjectComments ( { project } )
                             <p>{ comment.displayName }</p>
                         </div>
                         <div className="comment-date">
-                            <p>Date here</p>
+                            <p>FFF</p>
                         </div>
                         <div className="comment-content">
                             <p>{ comment.content }</p>
